@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handmade Gallery - Уникальные украшения и декор</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/lucide@latest/dist/umd/lucide.js">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Handmade Gallery</h1>
+                    <p>Уникальные вещи ручной работы</p>
+                </div>
+                
+                <nav class="nav">
+                    <a href="#home" class="nav-link active">Главная</a>
+                    <a href="#catalog" class="nav-link">Каталог</a>
+                    <a href="#about" class="nav-link">О нас</a>
+                    <a href="#contact" class="nav-link">Контакты</a>
+                </nav>
+                
+                <div class="header-actions">
+                    <button class="search-btn" onclick="toggleSearch()">
+                        <i data-lucide="search"></i>
+                    </button>
+                    <button class="user-btn" onclick="toggleUserMenu()">
+                        <i data-lucide="user"></i>
+                    </button>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        <i data-lucide="shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+                
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Найти уникальные вещи..." id="searchInput">
+            <button class="search-close" onclick="toggleSearch()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- User Menu -->
+    <div class="user-menu" id="userMenu">
+        <div class="user-menu-content">
+            <button class="user-menu-item" onclick="showAuthModal('login')">Войти</button>
+            <button class="user-menu-item" onclick="showAuthModal('register')">Регистрация</button>
+            <button class="user-menu-item" onclick="showSellerPanel()">Кабинет продавца</button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Откройте для себя мир уникальных вещей</h1>
+                <p class="hero-subtitle">Каждая вещь рассказывает свою историю. Найдите то, что тронет вашу душу.</p>
+                
+                <div class="hero-search">
+                    <div class="search-container-hero">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Поиск украшений, декора и многого другого..." id="heroSearchInput">
+                        <button class="search-submit" onclick="performSearch()">Найти</button>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-content">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">Все товары</button>
+                    <button class="filter-tab" data-filter="jewelry">Украшения</button>
+                    <button class="filter-tab" data-filter="decor">Декор</button>
+                    <button class="filter-tab" data-filter="accessories">Аксессуары</button>
+                    <button class="filter-tab" data-filter="art">Искусство</button>
+                </div>
+                
+                <div class="filter-options">
+                    <select class="filter-select" id="priceFilter">
+                        <option value="all">Все цены</option>
+                        <option value="0-1000">До 1 000 ₽</option>
+                        <option value="1000-5000">1 000 - 5 000 ₽</option>
+                        <option value="5000-15000">5 000 - 15 000 ₽</option>
+                        <option value="15000+">От 15 000 ₽</option>
+                    </select>
+                    
+                    <select class="filter-select" id="sortFilter">
+                        <option value="featured">Рекомендуемые</option>
+                        <option value="price-asc">По цене: по возрастанию</option>
+                        <option value="price-desc">По цене: по убыванию</option>
+                        <option value="rating">По рейтингу</option>
+                        <option value="newest">Новинки</option>
+                    </select>
+                    
+                    <button class="view-toggle" id="viewToggle" onclick="toggleView()">
+                        <i data-lucide="grid-3x3"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section" id="catalog">
+        <div class="container">
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+            
+            <div class="load-more-container">
+                <button class="load-more-btn" onclick="loadMoreProducts()">Загрузить еще</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Корзина</h3>
+            <button class="cart-close" onclick="toggleCart()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <div class="empty-cart">
+                <i data-lucide="shopping-bag"></i>
+                <p>Корзина пуста</p>
+            </div>
+        </div>
+        
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Итого:</span>
+                <span id="cartTotal">0 ₽</span>
+            </div>
+            <button class="checkout-btn" onclick="proceedToCheckout()">Оформить заказ</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Оформление заказа</h3>
+                <button class="modal-close" onclick="closeModal('checkoutModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form class="checkout-form" id="checkoutForm">
+                <div class="form-section">
+                    <h4>Контактная информация</h4>
+                    <div class="form-row">
+                        <input type="text" placeholder="Имя" required>
+                        <input type="text" placeholder="Фамилия" required>
+                    </div>
+                    <input type="email" placeholder="Email" required>
+                    <input type="tel" placeholder="Телефон" required>
+                </div>
+                
+                <div class="form-section">
+                    <h4>Адрес доставки</h4>
+                    <input type="text" placeholder="Город" required>
+                    <input type="text" placeholder="Улица, дом" required>
+                    <div class="form-row">
+                        <input type="text" placeholder="Квартира" required>
+                        <input type="text" placeholder="Индекс" required>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h4>Способ оплаты</h4>
+                    <div class="payment-options">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="card" checked>
+                            <span>Банковская карта</span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cod">
+                            <span>Наложенный платеж</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-order-btn">Подтвердить заказ</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="authTitle">Вход</h3>
+                <button class="modal-close" onclick="closeModal('authModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <form class="auth-form" id="authForm">
+                <div id="loginForm">
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Пароль" required>
+                    <button type="submit">Войти</button>
+                </div>
+                
+                <div id="registerForm" style="display: none;">
+                    <input type="text" name="firstName" placeholder="Имя" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Пароль" required>
+                    <input type="password" name="confirmPassword" placeholder="Подтвердите пароль" required>
+                    <button type="submit">Зарегистрироваться</button>
+                </div>
+                
+                <div class="auth-switch">
+                    <span id="authSwitchText">Нет аккаунта?</span>
+                    <button type="button" id="authSwitchBtn" onclick="toggleAuthMode()">Регистрация</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Seller Panel -->
+    <div class="modal-overlay" id="sellerModal">
+        <div class="modal seller-modal">
+            <div class="modal-header">
+                <h3>Кабинет продавца</h3>
+                <button class="modal-close" onclick="closeModal('sellerModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="seller-content">
+                <div class="seller-tabs">
+                    <button class="seller-tab active" data-tab="products">Мои товары</button>
+                    <button class="seller-tab" data-tab="orders">Заказы</button>
+                    <button class="seller-tab" data-tab="add">Добавить товар</button>
+                    <button class="seller-tab" data-tab="analytics">Аналитика</button>
+                </div>
+                
+                <div class="seller-panel-content">
+                    <div id="sellerProducts" class="seller-panel-section active">
+                        <h4>Мои товары</h4>
+                        <div class="seller-products-list" id="sellerProductsList">
+                            <!-- Seller's products will be shown here -->
+                        </div>
+                    </div>
+                    
+                    <div id="sellerOrders" class="seller-panel-section">
+                        <h4>Заказы</h4>
+                        <div class="seller-orders-list" id="sellerOrdersList">
+                            <!-- Orders will be shown here -->
+                        </div>
+                    </div>
+                    
+                    <div id="addProduct" class="seller-panel-section">
+                        <h4>Добавить новый товар</h4>
+                        <form class="add-product-form" id="addProductForm">
+                            <input type="text" placeholder="Название товара" required>
+                            <textarea placeholder="Описание товара" required></textarea>
+                            <input type="number" placeholder="Цена (₽)" required>
+                            <select required>
+                                <option value="">Выберите категорию</option>
+                                <option value="jewelry">Украшения</option>
+                                <option value="decor">Декор</option>
+                                <option value="accessories">Аксессуары</option>
+                                <option value="art">Искусство</option>
+                            </select>
+                            <input type="text" placeholder="URL изображения" required>
+                            <button type="submit">Добавить товар</button>
+                        </form>
+                    </div>
+                    
+                    <div id="analytics" class="seller-panel-section">
+                        <h4>Аналитика продаж</h4>
+                        <div class="analytics-grid">
+                            <div class="analytics-card">
+                                <h5>Продаж за месяц</h5>
+                                <p class="analytics-number">24</p>
+                            </div>
+                            <div class="analytics-card">
+                                <h5>Доход</h5>
+                                <p class="analytics-number">48 500 ₽</p>
+                            </div>
+                            <div class="analytics-card">
+                                <h5>Просмотры</h5>
+                                <p class="analytics-number">1 234</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Quick View -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal product-modal">
+            <div class="modal-header">
+                <h3 id="productTitle">Название товара</h3>
+                <button class="modal-close" onclick="closeModal('productModal')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            
+            <div class="product-view-content">
+                <div class="product-view-image">
+                    <img id="productImage" src="" alt="">
+                </div>
+                
+                <div class="product-view-info">
+                    <div class="product-meta">
+                        <span class="product-category" id="productCategory">Категория</span>
+                        <div class="product-rating" id="productRating">
+                            <div class="stars">
+                                <i data-lucide="star"></i>
+                                <i data-lucide="star"></i>
+                                <i data-lucide="star"></i>
+                                <i data-lucide="star"></i>
+                                <i data-lucide="star"></i>
+                            </div>
+                            <span class="rating-text">(4.8) • 24 отзыва</span>
+                        </div>
+                    </div>
+                    
+                    <p class="product-price" id="productPrice">2 500 ₽</p>
+                    
+                    <p class="product-description" id="productDescription">
+                        Описание товара будет здесь. Подробная информация о характеристиках, материалах и особенностях изготовления.
+                    </p>
+                    
+                    <div class="product-seller">
+                        <img src="" alt="" class="seller-avatar" id="sellerAvatar">
+                        <div class="seller-info">
+                            <h5 id="sellerName">Мастер Анна</h5>
+                            <p id="sellerLocation">Москва, Россия</p>
+                        </div>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <button class="add-to-cart-btn" onclick="addToCartFromModal()">В корзину</button>
+                        <button class="add-to-favorites-btn" onclick="toggleFavorite()">
+                            <i data-lucide="heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="product-reviews">
+                        <h5>Отзывы</h5>
+                        <div class="review-item">
+                            <div class="review-header">
+                                <span class="reviewer-name">Мария К.</span>
+                                <div class="review-stars">
+                                    <i data-lucide="star"></i>
+                                    <i data-lucide="star"></i>
+                                    <i data-lucide="star"></i>
+                                    <i data-lucide="star"></i>
+                                    <i data-lucide="star"></i>
+                                </div>
+                            </div>
+                            <p class="review-text">Отличное качество! Очень довольна покупкой.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="section-header">
+                    <h2>О нас</h2>
+                    <p>Мы создаем мост между мастерами и ценителями уникальных вещей</p>
+                </div>
+                
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h3>Наша миссия</h3>
+                        <p>Handmade Gallery — это площадка, где традиционные ремесла встречаются с современными технологиями. Мы верим, что каждая вещь, созданная руками мастера, несет в себе частичку его души и истории.</p>
+                        
+                        <h3>Что мы предлагаем</h3>
+                        <ul>
+                            <li>Уникальные изделия от талантливых мастеров</li>
+                            <li>Прямую связь между покупателями и продавцами</li>
+                            <li>Гарантию качества и подлинности</li>
+                            <li>Персональный подход к каждому клиенту</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Мастеров</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">10,000+</div>
+                            <div class="stat-label">Уникальных товаров</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50,000+</div>
+                            <div class="stat-label">Довольных клиентов</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.9</div>
+                            <div class="stat-label">Средний рейтинг</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-section">
+                    <h3>Наша команда</h3>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b0ad?w=150&h=150&fit=crop&crop=face" alt="Анна">
+                            <h4>Анна Петрова</h4>
+                            <p>Основатель и CEO</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Михаил">
+                            <h4>Михаил Сидоров</h4>
+                            <p>Технический директор</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Елена">
+                            <h4>Елена Козлова</h4>
+                            <p>Руководитель отдела маркетинга</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="section-header">
+                    <h2>Контакты</h2>
+                    <p>Мы всегда рады помочь и ответить на ваши вопросы</p>
+                </div>
+                
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h3>Свяжитесь с нами</h3>
+                        <div class="contact-item">
+                            <i data-lucide="mail"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>info@handmadegallery.ru</p>
+                                <p>support@handmadegallery.ru</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i data-lucide="phone"></i>
+                            <div>
+                                <h4>Телефон</h4>
+                                <p>+7 (495) 123-45-67</p>
+                                <p>Пн-Пт: 9:00 - 18:00</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i data-lucide="map-pin"></i>
+                            <div>
+                                <h4>Адрес</h4>
+                                <p>г. Москва, ул. Тверская, д. 15</p>
+                                <p>БЦ "Галерея", офис 201</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i data-lucide="clock"></i>
+                            <div>
+                                <h4>Время работы</h4>
+                                <p>Пн-Пт: 9:00 - 18:00</p>
+                                <p>Сб-Вс: 10:00 - 16:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form-container">
+                        <h3>Напишите нам</h3>
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-row">
+                                <input type="text" name="name" placeholder="Имя" required>
+                                <input type="email" name="email" placeholder="Email" required>
+                            </div>
+                            <input type="text" name="subject" placeholder="Тема" required>
+                            <textarea name="message" placeholder="Сообщение" rows="5" required></textarea>
+                            <button type="submit">Отправить сообщение</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="social-section">
+                    <h3>Мы в социальных сетях</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i data-lucide="instagram"></i>
+                            <span>Instagram</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-lucide="facebook"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-lucide="message-circle"></i>
+                            <span>Telegram</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i data-lucide="video"></i>
+                            <span>YouTube</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>Handmade Gallery</h3>
+                        <p>Уникальные вещи ручной работы</p>
+                    </div>
+                    <p class="footer-description">
+                        Платформа, где мастера и ценители встречаются для создания особых моментов и приобретения неповторимых изделий.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#catalog">Каталог</a></li>
+                        <li><a href="#about">О нас</a></li>
+                        <li><a href="#contact">Контакты</a></li>
+                        <li><a href="#" onclick="showSellerPanel()">Для продавцов</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Категории</h4>
+                    <ul class="footer-links">
+                        <li><a href="#catalog" onclick="filterProducts('jewelry')">Украшения</a></li>
+                        <li><a href="#catalog" onclick="filterProducts('decor')">Декор</a></li>
+                        <li><a href="#catalog" onclick="filterProducts('accessories')">Аксессуары</a></li>
+                        <li><a href="#catalog" onclick="filterProducts('art')">Искусство</a></li>
+                        <li><a href="#catalog" onclick="filterProducts('all')">Все категории</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Поддержка</h4>
+                    <ul class="footer-links">
+                        <li><a href="#contact">Связаться с нами</a></li>
+                        <li><a href="#" onclick="showToast('Часто задаваемые вопросы')">FAQ</a></li>
+                        <li><a href="#" onclick="showToast('Политика конфиденциальности')">Политика конфиденциальности</a></li>
+                        <li><a href="#" onclick="showToast('Условия использования')">Условия использования</a></li>
+                        <li><a href="#" onclick="showToast('Возврат и обмен')">Возврат и обмен</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Подписка на новости</h4>
+                    <p>Будьте первыми в курсе новых товаров и акций</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Ваш email" required>
+                        <button type="submit">
+                            <i data-lucide="send"></i>
+                        </button>
+                    </form>
+                    
+                    <div class="footer-social">
+                        <h4>Мы в соцсетях</h4>
+                        <div class="footer-social-links">
+                            <a href="#" class="footer-social-link">
+                                <i data-lucide="instagram"></i>
+                            </a>
+                            <a href="#" class="footer-social-link">
+                                <i data-lucide="facebook"></i>
+                            </a>
+                            <a href="#" class="footer-social-link">
+                                <i data-lucide="message-circle"></i>
+                            </a>
+                            <a href="#" class="footer-social-link">
+                                <i data-lucide="video"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <p>&copy; 2024 Handmade Gallery. Все права защищены.</p>
+                    <div class="footer-bottom-links">
+                        <a href="#" onclick="showToast('Политика конфиденциальности')">Политика конфиденциальности</a>
+                        <a href="#" onclick="showToast('Условия использования')">Условия использования</a>
+                        <a href="#" onclick="showToast('Правила продаж')">Правила продаж</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+        <div class="mobile-menu">
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+                <i data-lucide="x"></i>
+            </button>
+            
+            <div class="mobile-nav">
+                <a href="#home" class="mobile-nav-link" onclick="toggleMobileMenu()">Главная</a>
+                <a href="#catalog" class="mobile-nav-link" onclick="toggleMobileMenu()">Каталог</a>
+                <a href="#about" class="mobile-nav-link" onclick="toggleMobileMenu()">О нас</a>
+                <a href="#contact" class="mobile-nav-link" onclick="toggleMobileMenu()">Контакты</a>
+            </div>
+            
+            <div class="mobile-actions">
+                <button onclick="showAuthModal('login')">Войти</button>
+                <button onclick="showSellerPanel()">Кабинет продавца</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
